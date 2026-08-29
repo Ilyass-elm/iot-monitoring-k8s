@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: influxdb
+  namespace: iot-monitoring
+spec:
+  serviceName: influxdb
+  replica: 1
+  selector:
+    matchLabels: {app: influxdb}
+  template:
+    metadata:
+      labels: {app: influxdb}
+    spec:
+      containers:
+        - name: influxdb
+          image: influxdb:2.7
+          ports:
+            - containers: 8086
+          envFrom:
+            - SecretRef: {name: influxdb-auth}
+          env:
+            - name: DOCKER_INFLUXDB_INIT_MODE
+              value: setup
+          volumeMounts:
+            - name: influxdb-data
+              mountPath: /var/lib/influxdb2
+          resources:
+            requests: {cpu: 100m, memory: 256Mi}
+            limits: {cpu: 500m, memory: 512Mi}
+  volumeClaimTemplates:
+    - metadata:
+      name: influxdb-data
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 1Gi
