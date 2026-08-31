@@ -23,13 +23,13 @@ spec:
               value: "http://influxdb:8086"
             - name: INFLUXDB_ORG
               valueFrom:
-                secretKeyRef: { name: influxdb-auth, key: INFLUXDB_ORG }
+                secretKeyRef: { name: influxdb-auth, key: DOCKER_INFLUXDB_INIT_ORG }
             - name: INFLUXDB_BUCKET
               valueFrom:
-                secretKeyRef: { name: influxdb-auth, key: INFLUXDB_BUCKET }
+                secretKeyRef: { name: influxdb-auth, key: DOCKER_INFLUXDB_INIT_BUCKET }
             - name: INFLUXDB_TOKEN
               valueFrom:
-                secretKeyRef: { name: influxdb-auth, key: INFLUXDB_ADMIN_TOKEN }
+                secretKeyRef: { name: influxdb-auth, key: DOCKER_INFLUXDB_INIT_ADMIN_TOKEN }
           resources:
             requests: { cpu: 50m, memory: 64Mi }
             limits: { cpu: 250m, memory: 256Mi }
