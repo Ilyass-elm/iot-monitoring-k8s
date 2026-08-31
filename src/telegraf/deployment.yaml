@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: telegraf
+  namespace: iot-monitoring
+spec:
+  replicas: 1
+  selector:
+    matchLabels: {app: telegraf}
+  template:
+    metadata:
+      labels: {app: telegraf}
+    spec:
+      containers:
+        - name: telegraf
+          image: telegraf:1.30
+          env:
+            - name: INFLUX_TOKEN
+              valueFrom:
+                secretKeyRef: {name: influxdb-auth, key: DOCKER_INFLUXDB_INIT_ADMIN_TOKEN}
+          volumeMounts:
+            - name: config
+              mountPath: /etc/telegraf/telegraf.conf
+              subPath: telegraf.conf
+          resources:
+            requests: {cpu: 50m, memory: 64Mi}
+            limits: {cpu: 200m, memory: 256Mi}
+      volumes:
+        - name: config
+          configMap: {name: telegraf-config} 

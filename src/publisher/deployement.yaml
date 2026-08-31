@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: publisher
+  namespace: iot-monitoring
+spec:
+  replicas: 1
+  selector:
+    matchLabels: {app: publisher}
+  template:
+    metadata:
+      labels: {app: publisher}
+    spec:
+      containers:
+        - name: publisher
+          image: ilyasselm/iot-data-source:latest
+          env:
+            - name: MQTT_BROKER_HOST
+              value: broker
+            - name: MQTT_BROKER_PORT
+              value: "1883"
+          resources:
+            requests: {cpu: 20m, memory: 32Mi}
+            limits: {cpu: 100m, memory: 64Mi}
+          

@@ -1,0 +1,23 @@
+# manifests/60-frontend/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+  namespace: iot-monitoring
+spec:
+  replicas: 1
+  selector:
+    matchLabels: { app: frontend }
+  template:
+    metadata:
+      labels: { app: frontend }
+    spec:
+      containers:
+        - name: app-frontend
+          image: ilyasselm/iot-web-app:latest
+          command: ["sh", "-c", "npm run dev:frontend"]
+          ports:
+            - containerPort: 5173
+          resources:
+            requests: { cpu: 50m, memory: 64Mi }
+            limits: { cpu: 250m, memory: 256Mi }

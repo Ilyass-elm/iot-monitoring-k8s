@@ -4,7 +4,7 @@ metadata:
   name: mosquitto
   namespace: iot-monitoring
 spec:
-  selector: {app: mosquitto}
+  selector: {app: broker}
   ports:
-    - ports: 1883
+    - port: 1883
       targetPort: 1883

@@ -1,15 +1,15 @@
 apiVersion: apps/v1
-kind: Deploymenet
+kind: Deployment
 metadata:
-  name: mosquitto
+  name: broker
   namespace: iot-monitoring
 spec:
-  replica: 1
+  replicas: 1
   selector:
-    matchLabels: {app: mosquitto}
+    matchLabels: {app: broker}
   template:
     metadata:
-      labels: {app: mosquitto}
+      labels: {app: broker}
     spec:
       containers:
         - name: broker

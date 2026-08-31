@@ -1,0 +1,11 @@
+# manifests/60-frontend/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend
+  namespace: iot-monitoring
+spec:
+  selector: { app: frontend }
+  ports:
+    - port: 5173
+      targetPort: 5173
