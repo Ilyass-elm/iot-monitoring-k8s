@@ -38,7 +38,7 @@ After that create a namespace to keep all the created components organized in on
 ```
 kubectl create namespace iot-monitoring
 ```
-### 5. Build the services 
+# Build the services 
 Run the following the command to start the MQTT-broker:
 ```
 kubectl apply -k src/iot-broker/
@@ -51,8 +51,20 @@ You might see under status "ContainerCreating", just give some seconds and it wi
 Afterwords build the rest of the application components one by one. Always check after deploying a component if the pod is running.
 ```
 kubectl apply -f src/database/
-kubectl apply -k src/elegraf/
+# Pay attention here: -k and NOT -f. More Details in the Lessons Learned section.
+kubectl apply -k src/elegraf/ 
 kubectl apply -f src/publisher/
 kubectl apply -f src/backend/
 kubectl apply -f src/frontend/
 ```
+# Lessons Learned
+### Debugging
+While building this application I run into many issues, including pods not running, or some naming mismtach. One of the commands that I have been using a lot when I face an issue is
+```
+kubectl describe pod PDONAME -n iot-monitoring
+```
+Here you can see all the relevant information about the pod, its state, image, and even the actions or events that has been taken by the pod (e.g. pulling the image docker).
+### Link Configuration files
+I used mosquitto.conf and telegraf.conf to configure their appropriate services. In this case there are 2 Options: kustomize and configMap. kustomize is not primilry developed for this purpose, but I still want to test it. This is the reaosn the tag -k is mandatory whenever the kustomization file is inside a directory. It tells k8s to use this file to create a configMap. Later on I will rebuild the app and use configMap directly, without the need to go over kustomize (check other branches for updates).
+### Fastening K8S understaing
+This is a hands-on project that shows which role k8s objects (service, deployment...) serve. I also had the chance to use StateFulSet for the influxDB component to persist data, which is a common practice in the real world. I also used ingress to forward requests.
