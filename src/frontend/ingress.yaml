@@ -1,14 +1,13 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: dashboard-ingress
+  name: ingress
   namespace: iot-monitoring
-  annotations:
-    nginx.ingress.kuberenetes.io/rewrite-target: /
 spec:
-  ingressClassName: nginx
+  ingressClassName: "nginx"
   rules:
-    - http:
+    - host: iot-dashboard.com
+      http:
         paths:
           - path: /
             pathType: Prefix
@@ -17,10 +16,13 @@ spec:
                 name: frontend
                 port:
                   number: 5173
-          - path: /api
+    - host: influxdb.iot-dashboard.com
+      http:
+        paths:
+          - path: /
             pathType: Prefix
             backend:
               service:
-                name: backend
+                name: influxdb
                 port:
-                  number: 8000
+                  number: 8086
